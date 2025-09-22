@@ -12,11 +12,11 @@ void main() {
 
     // Verify that the main title is displayed.
     expect(find.text('NSC1 SECURE DOOR'), findsOneWidget);
-    
+
     // Verify that the two main buttons are present.
     expect(find.text("J'ai oublié mon badge"), findsOneWidget);
     expect(find.text("Je veux m'inscrire"), findsOneWidget);
-    
+
     // Verify that the contact text is present.
     expect(find.text('Contactez-nous :'), findsOneWidget);
   });
@@ -44,6 +44,11 @@ void main() {
 
     // Verify that we navigated to the register page.
     expect(find.text('Demande de Badge d\'Accès'), findsOneWidget);
-    expect(find.text('Remplissez ce formulaire pour obtenir vos identifiants et accès au bâtiment'), findsOneWidget);
+    expect(
+      find.text(
+        'Remplissez ce formulaire pour obtenir vos identifiants et accès au bâtiment',
+      ),
+      findsOneWidget,
+    );
   });
 }
