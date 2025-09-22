@@ -76,10 +76,10 @@ flutter:
   fonts:
     - family: Instrument Sans
       fonts:
-        - asset: fonts/InstrumentSans-Regular.ttf
-        - asset: fonts/InstrumentSans-Bold.ttf
+        - asset: fonts/InstrumentSans_Condensed-Regular.ttf
+        - asset: fonts/InstrumentSans_Condensed-Bold.ttf
           weight: 700
-        - asset: fonts/InstrumentSans-Medium.ttf
+        - asset: fonts/InstrumentSans_Condensed-Medium.ttf
           weight: 500
   #
   # For details regarding fonts from package dependencies,
