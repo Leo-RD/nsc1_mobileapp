@@ -12,7 +12,10 @@ class NSC1App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NSC1 Secure Door',
-      theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'Arial'),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        fontFamily: 'Instrument Sans',
+      ),
       home: const HomePage(),
       routes: {
         '/login': (context) => const LoginPage(),
@@ -45,22 +48,14 @@ class HomePage extends StatelessWidget {
                 const Spacer(flex: 2),
 
                 // Main title
-                const Text(
+                Text(
                   'NSC1 SECURE DOOR',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
-                    letterSpacing: 2,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(0, 2),
-                        blurRadius: 4,
-                        color: Colors.white54,
-                      ),
-                    ],
+                    fontFamily: 'Instrument Sans',
                   ),
-                  textAlign: TextAlign.center,
                 ),
 
                 const SizedBox(height: 60),
@@ -99,13 +94,14 @@ class HomePage extends StatelessWidget {
                       width: 1,
                     ),
                   ),
-                  child: const Text(
-                    'Contactez-nous :',
+                  child: Text(
+                    'Bienvenue sur le système de sécurité NSC1',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
-                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Instrument Sans',
                     ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ],
@@ -152,10 +148,11 @@ class HomePage extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       text,
-                      style: const TextStyle(
-                        fontSize: 18,
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
+                        fontFamily: 'Instrument Sans',
                       ),
                     ),
                   ],
@@ -254,8 +251,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             child: const Icon(
                               Icons.door_front_door,
-                              size: 30,
                               color: Colors.black,
+                              size: 30,
                             ),
                           ),
 
@@ -266,6 +263,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Connectez-vous avec vos\nidentifiants',
                             style: TextStyle(
                               fontSize: 20,
+                              fontFamily: 'Instrument Sans',
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -279,6 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
+                              fontFamily: 'Instrument Sans',
                             ),
                           ),
 
@@ -351,6 +350,7 @@ class _LoginPageState extends State<LoginPage> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
+                                            fontFamily: 'Instrument Sans',
                                           ),
                                         ),
                                       ),
@@ -406,6 +406,7 @@ class _LoginPageState extends State<LoginPage> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                   color: Colors.black,
+                                  fontFamily: 'Instrument Sans',
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -425,6 +426,7 @@ class _LoginPageState extends State<LoginPage> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
+                                    fontFamily: 'Instrument Sans',
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -455,7 +457,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: const Text(
                     'Contactez-nous :',
-                    style: TextStyle(fontSize: 14, color: Colors.black),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontFamily: 'Instrument Sans',
+                    ),
                   ),
                 ),
               ],
@@ -487,10 +493,16 @@ class _LoginPageState extends State<LoginPage> {
             controller: controller,
             obscureText: obscureText,
             validator: validator,
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'Instrument Sans',
+            ),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+              hintStyle: TextStyle(
+                color: Colors.black.withOpacity(0.7),
+                fontFamily: 'Instrument Sans',
+              ),
               prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
@@ -596,6 +608,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
+                              fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -607,6 +620,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.black54,
+                              fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -712,6 +726,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
+                                            fontFamily: 'Instrument Sans',
                                           ),
                                         ),
                                       ),
@@ -757,6 +772,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                   color: Colors.black,
+                                  fontFamily: 'Instrument Sans',
                                 ),
                               ),
                             ],
@@ -764,27 +780,42 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 12),
                           const Text(
                             '• Traitement sous 48h ouvrées',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Instrument Sans',
+                            ),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Badge personnel et non transmissible',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Instrument Sans',
+                            ),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Accès limité aux zones autorisées',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Instrument Sans',
+                            ),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Respect du règlement intérieur obligatoire',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Instrument Sans',
+                            ),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Restitution du badge en fin de mission',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'Instrument Sans',
+                            ),
                           ),
                           const SizedBox(height: 12),
                           const Text(
@@ -792,6 +823,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black54,
+                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                         ],
@@ -830,10 +862,16 @@ class _RegisterPageState extends State<RegisterPage> {
             controller: controller,
             keyboardType: keyboardType,
             validator: validator,
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'Instrument Sans',
+            ),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+              hintStyle: TextStyle(
+                color: Colors.black.withOpacity(0.7),
+                fontFamily: 'Instrument Sans',
+              ),
               prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
