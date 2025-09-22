@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Skybox.jpg'),
+            image: AssetImage('assets/images/skybox.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Skybox.jpg'),
+            image: AssetImage('assets/images/skybox.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -532,7 +532,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Skybox.jpg'),
+            image: AssetImage('assets/images/skybox.jpg'),
             fit: BoxFit.cover,
           ),
         ),
