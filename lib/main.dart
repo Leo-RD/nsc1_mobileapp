@@ -50,13 +50,13 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                     letterSpacing: 2,
                     shadows: [
                       Shadow(
                         offset: Offset(0, 2),
                         blurRadius: 4,
-                        color: Colors.black26,
+                        color: Colors.white54,
                       ),
                     ],
                   ),
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.pushNamed(context, '/login'),
                   icon: Icons.key,
                   text: "J'ai oublié mon badge",
-                  color: Colors.blue.withOpacity(0.3),
+                  color: Colors.blue.withOpacity(0.7),
                 ),
 
                 const SizedBox(height: 20),
@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.pushNamed(context, '/register'),
                   icon: Icons.edit,
                   text: "Je veux m'inscrire",
-                  color: Colors.green.withOpacity(0.3),
+                  color: Colors.green.withOpacity(0.7),
                 ),
 
                 const Spacer(flex: 2),
@@ -103,7 +103,7 @@ class HomePage extends StatelessWidget {
                     'Contactez-nous :',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -148,14 +148,14 @@ class HomePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(icon, size: 24, color: Colors.white),
+                    Icon(icon, size: 24, color: Colors.black),
                     const SizedBox(width: 12),
                     Text(
                       text,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ],
@@ -255,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
                             child: const Icon(
                               Icons.door_front_door,
                               size: 30,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                           ),
 
@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -278,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
                             'Déverrouiller la porte',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
+                              color: Colors.black54,
                             ),
                           ),
 
@@ -405,7 +405,7 @@ class _LoginPageState extends State<LoginPage> {
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -455,7 +455,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: const Text(
                     'Contactez-nous :',
-                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    style: TextStyle(fontSize: 14, color: Colors.black),
                   ),
                 ),
               ],
@@ -487,11 +487,11 @@ class _LoginPageState extends State<LoginPage> {
             controller: controller,
             obscureText: obscureText,
             validator: validator,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-              prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.7)),
+              hintStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+              prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -595,7 +595,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -606,7 +606,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             'Remplissez ce formulaire pour obtenir vos identifiants et accès au bâtiment',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white70,
+                              color: Colors.black54,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -749,14 +749,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info, color: Colors.white),
+                              Icon(Icons.info, color: Colors.black),
                               const SizedBox(width: 8),
                               const Text(
                                 'Informations importantes',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -764,34 +764,34 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 12),
                           const Text(
                             '• Traitement sous 48h ouvrées',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Badge personnel et non transmissible',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Accès limité aux zones autorisées',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Respect du règlement intérieur obligatoire',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             '• Restitution du badge en fin de mission',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                           const SizedBox(height: 12),
                           const Text(
                             'Support technique : support@nsc1.com | Urgences : 01 23 45 67 89',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white70,
+                              color: Colors.black54,
                             ),
                           ),
                         ],
@@ -830,11 +830,11 @@ class _RegisterPageState extends State<RegisterPage> {
             controller: controller,
             keyboardType: keyboardType,
             validator: validator,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-              prefixIcon: Icon(icon, color: Colors.white.withOpacity(0.7)),
+              hintStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+              prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
