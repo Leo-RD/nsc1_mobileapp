@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.pushNamed(context, '/login'),
                   icon: Icons.key,
                   text: "J'ai oublié mon badge",
-                  color: Colors.blue.withOpacity(0.7),
+                  color: Colors.blue.withValues(alpha: 0.7),
                 ),
 
                 const SizedBox(height: 20),
@@ -75,7 +75,7 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.pushNamed(context, '/register'),
                   icon: Icons.edit,
                   text: "Je veux m'inscrire",
-                  color: Colors.green.withOpacity(0.7),
+                  color: Colors.green.withValues(alpha: 0.7),
                 ),
 
                 const Spacer(flex: 2),
@@ -87,10 +87,10 @@ class HomePage extends StatelessWidget {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -126,9 +126,12 @@ class HomePage extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color, color.withOpacity(0.1)],
+          colors: [color, color.withValues(alpha: 0.1)],
         ),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -198,10 +201,10 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -228,10 +231,10 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -246,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 60,
                             height: 60,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
@@ -322,7 +325,7 @@ class _LoginPageState extends State<LoginPage> {
                                   width: double.infinity,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.8),
+                                    color: Colors.black.withValues(alpha: 0.8),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Material(
@@ -373,10 +376,10 @@ class _LoginPageState extends State<LoginPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.2),
+                    color: Colors.red.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.red.withOpacity(0.4),
+                      color: Colors.red.withValues(alpha: 0.4),
                       width: 1,
                     ),
                   ),
@@ -417,7 +420,7 @@ class _LoginPageState extends State<LoginPage> {
                                   vertical: 12,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.8),
+                                  color: Colors.red.withValues(alpha: 0.8),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Text(
@@ -448,10 +451,10 @@ class _LoginPageState extends State<LoginPage> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -481,9 +484,12 @@ class _LoginPageState extends State<LoginPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -500,10 +506,13 @@ class _LoginPageState extends State<LoginPage> {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 fontFamily: 'Instrument Sans',
               ),
-              prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
+              prefixIcon: Icon(
+                icon,
+                color: Colors.black.withValues(alpha: 0.7),
+              ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -558,10 +567,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -588,10 +597,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: .1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: .2),
                       width: 1,
                     ),
                   ),
@@ -698,7 +707,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   width: double.infinity,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                    color: Colors.green.withOpacity(0.8),
+                                    color: Colors.green.withValues(alpha: 0.8),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Material(
@@ -748,10 +757,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.2),
+                    color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.blue.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -850,9 +859,12 @@ class _RegisterPageState extends State<RegisterPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -869,10 +881,13 @@ class _RegisterPageState extends State<RegisterPage> {
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: TextStyle(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 fontFamily: 'Instrument Sans',
               ),
-              prefixIcon: Icon(icon, color: Colors.black.withOpacity(0.7)),
+              prefixIcon: Icon(
+                icon,
+                color: Colors.black.withValues(alpha: 0.7),
+              ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
