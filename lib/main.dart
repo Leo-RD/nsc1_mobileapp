@@ -42,30 +42,57 @@ class HomePage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Spacer(flex: 2),
+                // Place le titre plus haut
+                const SizedBox(height: 16),
 
-                // Main title
-                Text(
-                  'NSC1 SECURE DOOR',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'Instrument Sans',
+                // Animated title with container
+                FadeInAnimation(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 16.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.25),
+                      borderRadius: BorderRadius.circular(16.0),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.5),
+                        width: 2.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.5),
+                          blurRadius: 15,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: const Text(
+                      'NSC1 SECURE DOOR',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2.0,
+                        fontFamily: 'Instrument Sans',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
 
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
 
                 // Forgot badge button
                 _buildGlassButton(
                   onPressed: () => Navigator.pushNamed(context, '/login'),
                   icon: Icons.key,
                   text: "J'ai oublié mon badge",
-                  color: Colors.blue.withValues(alpha: 0.7),
+                  color: Colors.blue,
                 ),
 
                 const SizedBox(height: 20),
@@ -75,10 +102,10 @@ class HomePage extends StatelessWidget {
                   onPressed: () => Navigator.pushNamed(context, '/register'),
                   icon: Icons.edit,
                   text: "Je veux m'inscrire",
-                  color: Colors.green.withValues(alpha: 0.7),
+                  color: Colors.green,
                 ),
 
-                const Spacer(flex: 2),
+                const Spacer(),
 
                 // Contact info
                 Container(
@@ -120,41 +147,54 @@ class HomePage extends StatelessWidget {
   }) {
     return Container(
       width: double.infinity,
-      height: 60,
+      height: 64,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [color, color.withValues(alpha: 0.1)],
+          colors: [
+            color.withOpacity(0.95),
+            color.withOpacity(0.75),
+          ],
         ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.45),
+            blurRadius: 14,
+            spreadRadius: 1,
+            offset: const Offset(0, 6),
+          ),
+        ],
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
-          width: 1,
+          color: Colors.white.withOpacity(0.5),
+          width: 1.5,
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: onPressed,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
+              splashColor: Colors.white.withOpacity(0.2),
+              highlightColor: Colors.white.withOpacity(0.1),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(icon, size: 24, color: Colors.black),
+                    Icon(icon, size: 24, color: Colors.white),
                     const SizedBox(width: 12),
                     Text(
                       text,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                         fontFamily: 'Instrument Sans',
                       ),
                     ),
@@ -165,6 +205,75 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// Fade in animation for the title
+class FadeInAnimation extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+
+  const FadeInAnimation({
+    Key? key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 1000),
+  }) : super(key: key);
+
+  @override
+  _FadeInAnimationState createState() => _FadeInAnimationState();
+}
+
+class _FadeInAnimationState extends State<FadeInAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  late Animation<double> _offset;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+
+    _opacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOutCubic,
+      ),
+    );
+
+    _offset = Tween<double>(begin: 20.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, _offset.value),
+          child: Opacity(
+            opacity: _opacity.value,
+            child: widget.child,
+          ),
+        );
+      },
     );
   }
 }
