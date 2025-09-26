@@ -1,25 +1,56 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'dart:io';
+import 'package:flutter/services.dart';
+
+  extension ColorCompat on Color {
+    Color withValues({double? alpha, int? red, int? green, int? blue}) {
+      if (alpha != null) {
+        return withOpacity(alpha);
+      }
+      return this;
+    }
+  }
 
 void main() {
   runApp(const NSC1App());
 }
 
-class NSC1App extends StatelessWidget {
+class NSC1App extends StatefulWidget {
   const NSC1App({super.key});
+
+  @override
+  State<NSC1App> createState() => _NSC1AppState();
+}
+
+class _NSC1AppState extends State<NSC1App> {
+  ThemeMode _themeMode = ThemeMode.light;
+
+  void _setThemeMode(ThemeMode mode) => setState(() => _themeMode = mode);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NSC1 Secure Door',
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.blue,
         fontFamily: 'Instrument Sans',
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        fontFamily: 'Instrument Sans',
+        colorScheme: const ColorScheme.dark().copyWith(primary: Colors.blue),
+      ),
+      themeMode: _themeMode,
       home: const HomePage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
+        '/settings': (context) => SettingsPage(
+              themeMode: _themeMode,
+              onThemeModeChanged: _setThemeMode,
+            ),
       },
     );
   }
@@ -30,11 +61,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/skybox.jpg'),
+            image: AssetImage(
+              isDark
+                  ? 'assets/images/misty-starry-night-sky-background.jpg'
+                  : 'assets/images/skybox.jpg',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -47,6 +83,37 @@ class HomePage extends StatelessWidget {
               children: [
                 // Place le titre plus haut
                 const SizedBox(height: 16),
+
+                // Settings button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.settings,
+                              color: Colors.white,
+                            ),
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/settings'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
                 // Animated title with container
                 FadeInAnimation(
@@ -125,7 +192,7 @@ class HomePage extends StatelessWidget {
                     'Bienvenue sur le système de sécurité NSC1',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: isDark ? Colors.white : Colors.black,
                       fontFamily: 'Instrument Sans',
                     ),
                     textAlign: TextAlign.center,
@@ -281,11 +348,16 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/skybox.jpg'),
+            image: AssetImage(
+              isDark
+                  ? 'assets/images/misty-starry-night-sky-background.jpg'
+                  : 'assets/images/skybox.jpg',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -350,9 +422,9 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.door_front_door,
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               size: 30,
                             ),
                           ),
@@ -360,24 +432,24 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 24),
 
                           // Title
-                          const Text(
+                          Text(
                             'Connectez-vous avec vos\nidentifiants',
                             style: TextStyle(
                               fontSize: 20,
                               fontFamily: 'Instrument Sans',
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
 
                           const SizedBox(height: 8),
 
-                          const Text(
+                          Text(
                             'Déverrouiller la porte',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: isDark ? Colors.white70 : Colors.black54,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
@@ -501,12 +573,12 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(12),
                           child: Column(
                             children: [
-                              const Text(
+                              Text(
                                 'Accès d\'urgence - Appel à un agent',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
-                                  color: Colors.black,
+                                  color: isDark ? Colors.white : Colors.black,
                                   fontFamily: 'Instrument Sans',
                                 ),
                                 textAlign: TextAlign.center,
@@ -556,11 +628,11 @@ class _LoginPageState extends State<LoginPage> {
                       width: 1,
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Contactez-nous :',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.black,
+                      color: isDark ? Colors.white : Colors.black,
                       fontFamily: 'Instrument Sans',
                     ),
                   ),
@@ -593,30 +665,39 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            validator: validator,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'Instrument Sans',
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: TextStyle(
-                color: Colors.black.withValues(alpha: 0.7),
-                fontFamily: 'Instrument Sans',
-              ),
-              prefixIcon: Icon(
-                icon,
-                color: Colors.black.withValues(alpha: 0.7),
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
+          child: Builder(
+            builder: (context) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              return TextFormField(
+                controller: controller,
+                obscureText: obscureText,
+                validator: validator,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                  fontFamily: 'Instrument Sans',
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: TextStyle(
+                    color: isDark
+                        ? Colors.white70
+                        : Colors.black.withValues(alpha: 0.7),
+                    fontFamily: 'Instrument Sans',
+                  ),
+                  prefixIcon: Icon(
+                    icon,
+                    color: isDark
+                        ? Colors.white70
+                        : Colors.black.withValues(alpha: 0.7),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -647,11 +728,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/skybox.jpg'),
+            image: AssetImage(
+              isDark
+                  ? 'assets/images/misty-starry-night-sky-background.jpg'
+                  : 'assets/images/skybox.jpg',
+            ),
             fit: BoxFit.cover,
           ),
         ),
@@ -709,12 +795,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         children: [
                           // Title
-                          const Text(
+                          Text(
                             'Demande de Badge d\'Accès',
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
@@ -722,11 +808,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
                           const SizedBox(height: 8),
 
-                          const Text(
+                          Text(
                             'Remplissez ce formulaire pour obtenir vos identifiants et accès au bâtiment',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black54,
+                              color: isDark ? Colors.white70 : Colors.black54,
                               fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
@@ -871,65 +957,65 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info, color: Colors.black),
+                              Icon(Icons.info, color: isDark ? Colors.white : Colors.black),
                               const SizedBox(width: 8),
-                              const Text(
+                              Text(
                                 'Informations importantes',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: isDark ? Colors.white : Colors.black,
                                   fontFamily: 'Instrument Sans',
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             '• Traitement sous 48h ouvrées',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             '• Badge personnel et non transmissible',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             '• Accès limité aux zones autorisées',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             '• Respect du règlement intérieur obligatoire',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
-                          const Text(
+                          Text(
                             '• Restitution du badge en fin de mission',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: isDark ? Colors.white : Colors.black,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'Support technique : support@nsc1.com | Urgences : 01 23 45 67 89',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black54,
+                              color: isDark ? Colors.white70 : Colors.black54,
                               fontFamily: 'Instrument Sans',
                             ),
                           ),
@@ -968,30 +1054,39 @@ class _RegisterPageState extends State<RegisterPage> {
         borderRadius: BorderRadius.circular(12),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: TextFormField(
-            controller: controller,
-            keyboardType: keyboardType,
-            validator: validator,
-            style: const TextStyle(
-              color: Colors.black,
-              fontFamily: 'Instrument Sans',
-            ),
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: TextStyle(
-                color: Colors.black.withValues(alpha: 0.7),
-                fontFamily: 'Instrument Sans',
-              ),
-              prefixIcon: Icon(
-                icon,
-                color: Colors.black.withValues(alpha: 0.7),
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
+          child: Builder(
+            builder: (context) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              return TextFormField(
+                controller: controller,
+                keyboardType: keyboardType,
+                validator: validator,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+                  fontFamily: 'Instrument Sans',
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: TextStyle(
+                    color: isDark
+                        ? Colors.white70
+                        : Colors.black.withValues(alpha: 0.7),
+                    fontFamily: 'Instrument Sans',
+                  ),
+                  prefixIcon: Icon(
+                    icon,
+                    color: isDark
+                        ? Colors.white70
+                        : Colors.black.withValues(alpha: 0.7),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -1005,5 +1100,189 @@ class _RegisterPageState extends State<RegisterPage> {
     _phoneController.dispose();
     _companyController.dispose();
     super.dispose();
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onThemeModeChanged;
+
+  const SettingsPage({
+    super.key,
+    required this.themeMode,
+    required this.onThemeModeChanged,
+  });
+
+  void _quitApp(BuildContext context) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      SystemNavigator.pop();
+    } else {
+      exit(0);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = themeMode == ThemeMode.dark;
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              isDark
+                  ? 'assets/images/misty-starry-night-sky-background.jpg'
+                  : 'assets/images/skybox.jpg',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.brightness_6,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Mode sombre',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Instrument Sans',
+                                    color: isDark ? Colors.white : Colors.black,
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: isDark,
+                                onChanged: (value) => onThemeModeChanged(
+                                  value ? ThemeMode.dark : ThemeMode.light,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Container(
+                            width: double.infinity,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Colors.red.withValues(alpha: 0.95),
+                                  Colors.red.withValues(alpha: 0.75),
+                                ],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.red.withValues(alpha: 0.45),
+                                  blurRadius: 14,
+                                  spreadRadius: 1,
+                                  offset: const Offset(0, 6),
+                                ),
+                              ],
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.5),
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () => _quitApp(context),
+                                borderRadius: BorderRadius.circular(16),
+                                child: const Center(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.power_settings_new,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(width: 12),
+                                      Text(
+                                        "Quitter l'app",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                          fontFamily: 'Instrument Sans',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const Spacer(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
