@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
   extension ColorCompat on Color {
     Color withValues({double? alpha, int? red, int? green, int? blue}) {
       if (alpha != null) {
-        return withOpacity(alpha);
+        return withValues(alpha: alpha);
       }
       return this;
     }
@@ -1238,7 +1238,7 @@ class SettingsPage extends StatelessWidget {
                                 ),
                               ],
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 width: 1.5,
                               ),
                             ),
