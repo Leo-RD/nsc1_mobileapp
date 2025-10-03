@@ -67,7 +67,7 @@ import 'package:http/http.dart' as http;
     return ApiService(
       baseUrl: baseUrl,
       basicAuthUser: 'NSC1_API',
-      basicAuthPass: 'Jone_Porte!87-/',
+      basicAuthPass: 'JonePorte187',
     );
   }
 
@@ -153,6 +153,68 @@ import 'package:http/http.dart' as http;
     if (base.endsWith('/')) base = base.substring(0, base.length - 1);
     if (!path.startsWith('/')) path = '/$path';
     return '$base$path';
+  }
+
+  /// Composite helper: submit a typical student registration flow.
+  /// Creates a `personne` with type_personne 'eleve', then an `eleve` row,
+  /// and optionally a `droit_acces` entry.
+  Future<Map<String, dynamic>> submitRegistrationStudent({
+    required String prenom,
+    required String nom,
+    required String email,
+    required String telephone,
+    String? organisation,
+    String? motifDemande,
+    String? classe,
+    String? numeroEtudiant,
+    int? idPorte,
+    String? raisonAcces,
+    DateTime? dateDebut,
+    DateTime? dateFin,
+    int? creePar,
+  }) async {
+    // Step 1: create person (eleve)
+    final personRes = await createPerson({
+      'prenom': prenom,
+      'nom': nom,
+      'email': email,
+      'organisation': organisation,
+      'motif_demande': motifDemande,
+      'telephone': telephone,
+      'type_personne': 'eleve',
+      'actif': 1,
+    }..removeWhere((k, v) => v == null));
+
+    final idPersonne = personRes['id'] ?? personRes['id_personne'];
+    if (idPersonne == null) {
+      throw ApiException(statusCode: 500, message: 'Missing id_personne from /personnes');
+    }
+
+    // Step 2: create eleve row
+    final eleveRes = await createEleve({
+      'id_personne': idPersonne,
+      if (classe != null) 'classe': classe,
+      if (numeroEtudiant != null) 'numero_etudiant': numeroEtudiant,
+    });
+
+    Map<String, dynamic>? droitRes;
+    if (idPorte != null) {
+      droitRes = await createDroitAcces({
+        'id_personne': idPersonne,
+        'id_porte': idPorte,
+        if (dateDebut != null) 'date_debut': dateDebut.toIso8601String(),
+        if (dateFin != null) 'date_fin': dateFin.toIso8601String(),
+        if (creePar != null) 'cree_par': creePar,
+        if (raisonAcces != null) 'raison': raisonAcces,
+      });
+    }
+
+    return {
+      'id_personne': idPersonne,
+      'personne': personRes,
+      'eleve': eleveRes,
+      if (droitRes != null) 'droit_acces': droitRes,
+    };
   }
 
   void close() {

@@ -753,6 +753,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _companyController = TextEditingController();
+  final ApiService _api = ApiService.defaultInstance();
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -925,25 +927,60 @@ class _RegisterPageState extends State<RegisterPage> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Demande envoyée avec succès!',
-                                              ),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
-                                        }
-                                      },
+                                      onTap: _loading
+                                          ? null
+                                          : () async {
+                                              if (!_formKey.currentState!.validate()) return;
+
+                                              // Split full name into prenom/nom (best-effort)
+                                              final fullName = _nameController.text.trim();
+                                              final parts = fullName.split(RegExp(r'\s+'));
+                                              final prenom = parts.isNotEmpty ? parts.first : '';
+                                              final nom = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+
+                                              setState(() => _loading = true);
+                                              try {
+                                                await _api.submitRegistrationStudent(
+                                                  prenom: prenom,
+                                                  nom: nom,
+                                                  email: _emailController.text.trim(),
+                                                  telephone: _phoneController.text.trim(),
+                                                  organisation: _companyController.text.trim().isEmpty
+                                                      ? null
+                                                      : _companyController.text.trim(),
+                                                );
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text('Demande envoyée avec succès!'),
+                                                    backgroundColor: Colors.green,
+                                                  ),
+                                                );
+                                              } on ApiException catch (e) {
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(e.message),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              } catch (_) {
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text('Erreur lors de l\'envoi de la demande'),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              } finally {
+                                                if (mounted) setState(() => _loading = false);
+                                              }
+                                            },
                                       borderRadius: BorderRadius.circular(12),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
-                                          'Envoyer la demande',
-                                          style: TextStyle(
+                                          _loading ? 'Envoi...' : 'Envoyer la demande',
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
