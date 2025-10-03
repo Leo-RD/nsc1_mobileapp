@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'services/api_service.dart';
 
-  extension ColorCompat on Color {
-    Color withValues({double? alpha, int? red, int? green, int? blue}) {
-      if (alpha != null) {
-        return withValues(alpha: alpha);
+extension ColorCompat on Color {
+  Color withValues({double? alpha, int? red, int? green, int? blue}) {
+    if (alpha != null) {
+      return withOpacity(alpha);
       }
       return this;
     }
@@ -345,6 +346,8 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final ApiService _api = ApiService.defaultInstance();
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -501,25 +504,50 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {
-                                        if (_formKey.currentState!.validate()) {
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Connexion en cours...',
-                                              ),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
-                                        }
-                                      },
+                                      onTap: _loading
+                                          ? null
+                                          : () async {
+                                              if (!_formKey.currentState!.validate()) {
+                                                return;
+                                              }
+                                              setState(() => _loading = true);
+                                              try {
+                                                final _ = await _api.login(
+                                                  username: _usernameController.text.trim(),
+                                                  password: _passwordController.text,
+                                                );
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text('Connecté'),
+                                                    backgroundColor: Colors.green,
+                                                  ),
+                                                );
+                                              } on ApiException catch (e) {
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(e.message),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              } catch (_) {
+                                                if (!mounted) return;
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  const SnackBar(
+                                                    content: Text('Erreur de connexion'),
+                                                    backgroundColor: Colors.red,
+                                                  ),
+                                                );
+                                              } finally {
+                                                if (mounted) setState(() => _loading = false);
+                                              }
+                                            },
                                       borderRadius: BorderRadius.circular(12),
-                                      child: const Center(
+                                      child: Center(
                                         child: Text(
-                                          'Ouvrir',
-                                          style: TextStyle(
+                                          _loading ? 'Connexion...' : 'Ouvrir',
+                                          style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
