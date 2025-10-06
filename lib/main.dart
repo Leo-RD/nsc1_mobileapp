@@ -7,11 +7,11 @@ import 'services/api_service.dart';
 extension ColorCompat on Color {
   Color withValues({double? alpha, int? red, int? green, int? blue}) {
     if (alpha != null) {
-      return withOpacity(alpha);
-      }
-      return this;
+      return withValues(alpha: alpha);
     }
+    return this;
   }
+}
 
 void main() {
   runApp(const NSC1App());
@@ -49,9 +49,9 @@ class _NSC1AppState extends State<NSC1App> {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/settings': (context) => SettingsPage(
-              themeMode: _themeMode,
-              onThemeModeChanged: _setThemeMode,
-            ),
+          themeMode: _themeMode,
+          onThemeModeChanged: _setThemeMode,
+        ),
       },
     );
   }
@@ -507,25 +507,34 @@ class _LoginPageState extends State<LoginPage> {
                                       onTap: _loading
                                           ? null
                                           : () async {
-                                              if (!_formKey.currentState!.validate()) {
+                                              if (!_formKey.currentState!
+                                                  .validate()) {
                                                 return;
                                               }
                                               setState(() => _loading = true);
                                               try {
                                                 final _ = await _api.login(
-                                                  username: _usernameController.text.trim(),
-                                                  password: _passwordController.text,
+                                                  username: _usernameController
+                                                      .text
+                                                      .trim(),
+                                                  password:
+                                                      _passwordController.text,
                                                 );
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   const SnackBar(
                                                     content: Text('Connecté'),
-                                                    backgroundColor: Colors.green,
+                                                    backgroundColor:
+                                                        Colors.green,
                                                   ),
                                                 );
                                               } on ApiException catch (e) {
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   SnackBar(
                                                     content: Text(e.message),
                                                     backgroundColor: Colors.red,
@@ -533,14 +542,21 @@ class _LoginPageState extends State<LoginPage> {
                                                 );
                                               } catch (_) {
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   const SnackBar(
-                                                    content: Text('Erreur de connexion'),
+                                                    content: Text(
+                                                      'Erreur de connexion',
+                                                    ),
                                                     backgroundColor: Colors.red,
                                                   ),
                                                 );
                                               } finally {
-                                                if (mounted) setState(() => _loading = false);
+                                                if (mounted)
+                                                  setState(
+                                                    () => _loading = false,
+                                                  );
                                               }
                                             },
                                       borderRadius: BorderRadius.circular(12),
@@ -930,35 +946,63 @@ class _RegisterPageState extends State<RegisterPage> {
                                       onTap: _loading
                                           ? null
                                           : () async {
-                                              if (!_formKey.currentState!.validate()) return;
+                                              if (!_formKey.currentState!
+                                                  .validate())
+                                                return;
 
                                               // Split full name into prenom/nom (best-effort)
-                                              final fullName = _nameController.text.trim();
-                                              final parts = fullName.split(RegExp(r'\s+'));
-                                              final prenom = parts.isNotEmpty ? parts.first : '';
-                                              final nom = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+                                              final fullName = _nameController
+                                                  .text
+                                                  .trim();
+                                              final parts = fullName.split(
+                                                RegExp(r'\s+'),
+                                              );
+                                              final prenom = parts.isNotEmpty
+                                                  ? parts.first
+                                                  : '';
+                                              final nom = parts.length > 1
+                                                  ? parts.sublist(1).join(' ')
+                                                  : '';
 
                                               setState(() => _loading = true);
                                               try {
-                                                await _api.submitRegistrationStudent(
-                                                  prenom: prenom,
-                                                  nom: nom,
-                                                  email: _emailController.text.trim(),
-                                                  telephone: _phoneController.text.trim(),
-                                                  organisation: _companyController.text.trim().isEmpty
-                                                      ? null
-                                                      : _companyController.text.trim(),
-                                                );
+                                                await _api
+                                                    .submitRegistrationStudent(
+                                                      prenom: prenom,
+                                                      nom: nom,
+                                                      email: _emailController
+                                                          .text
+                                                          .trim(),
+                                                      telephone:
+                                                          _phoneController.text
+                                                              .trim(),
+                                                      organisation:
+                                                          _companyController
+                                                              .text
+                                                              .trim()
+                                                              .isEmpty
+                                                          ? null
+                                                          : _companyController
+                                                                .text
+                                                                .trim(),
+                                                    );
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   const SnackBar(
-                                                    content: Text('Demande envoyée avec succès!'),
-                                                    backgroundColor: Colors.green,
+                                                    content: Text(
+                                                      'Demande envoyée avec succès!',
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.green,
                                                   ),
                                                 );
                                               } on ApiException catch (e) {
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   SnackBar(
                                                     content: Text(e.message),
                                                     backgroundColor: Colors.red,
@@ -966,20 +1010,29 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 );
                                               } catch (_) {
                                                 if (!mounted) return;
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
                                                   const SnackBar(
-                                                    content: Text('Erreur lors de l\'envoi de la demande'),
+                                                    content: Text(
+                                                      'Erreur lors de l\'envoi de la demande',
+                                                    ),
                                                     backgroundColor: Colors.red,
                                                   ),
                                                 );
                                               } finally {
-                                                if (mounted) setState(() => _loading = false);
+                                                if (mounted)
+                                                  setState(
+                                                    () => _loading = false,
+                                                  );
                                               }
                                             },
                                       borderRadius: BorderRadius.circular(12),
                                       child: Center(
                                         child: Text(
-                                          _loading ? 'Envoi...' : 'Envoyer la demande',
+                                          _loading
+                                              ? 'Envoi...'
+                                              : 'Envoyer la demande',
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1022,7 +1075,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.info, color: isDark ? Colors.white : Colors.black),
+                              Icon(
+                                Icons.info,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 'Informations importantes',
