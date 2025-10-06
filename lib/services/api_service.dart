@@ -163,9 +163,9 @@ import 'package:http/http.dart' as http;
     required String nom,
     required String email,
     required String telephone,
-    String? organisation,
-    String? motifDemande,
-    String? classe,
+    required String organisation,
+    required String motifDemande,
+    required String classe,
     String? numeroEtudiant,
     int? idPorte,
     String? raisonAcces,
@@ -183,7 +183,7 @@ import 'package:http/http.dart' as http;
       'telephone': telephone,
       'type_personne': 'eleve',
       'actif': 1,
-    }..removeWhere((k, v) => v == null));
+    });
 
     final idPersonne = personRes['id'] ?? personRes['id_personne'];
     if (idPersonne == null) {
@@ -193,7 +193,7 @@ import 'package:http/http.dart' as http;
     // Step 2: create eleve row
     final eleveRes = await createEleve({
       'id_personne': idPersonne,
-      if (classe != null) 'classe': classe,
+      'classe': classe,
       if (numeroEtudiant != null) 'numero_etudiant': numeroEtudiant,
     });
 

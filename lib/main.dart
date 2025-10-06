@@ -769,8 +769,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _companyController = TextEditingController();
+  final _motifController = TextEditingController();
   final ApiService _api = ApiService.defaultInstance();
   bool _loading = false;
+  String _selectedClasse = 'CIEL1';
 
   @override
   Widget build(BuildContext context) {
@@ -920,15 +922,33 @@ class _RegisterPageState extends State<RegisterPage> {
 
                                 _buildGlassTextField(
                                   controller: _companyController,
-                                  hintText: 'Entreprise',
+                                  hintText: 'Organisation',
                                   icon: Icons.business,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Veuillez saisir votre entreprise';
+                                      return 'Veuillez saisir votre organisation';
                                     }
                                     return null;
                                   },
                                 ),
+
+                                const SizedBox(height: 16),
+
+                                _buildGlassTextField(
+                                  controller: _motifController,
+                                  hintText: 'Motif de la demande',
+                                  icon: Icons.description,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Veuillez saisir le motif de votre demande';
+                                    }
+                                    return null;
+                                  },
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                _buildClasseDropdown(isDark),
 
                                 const SizedBox(height: 24),
 
@@ -951,41 +971,22 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 return;
 
                                               // Split full name into prenom/nom (best-effort)
-                                              final fullName = _nameController
-                                                  .text
-                                                  .trim();
-                                              final parts = fullName.split(
-                                                RegExp(r'\s+'),
-                                              );
-                                              final prenom = parts.isNotEmpty
-                                                  ? parts.first
-                                                  : '';
-                                              final nom = parts.length > 1
-                                                  ? parts.sublist(1).join(' ')
-                                                  : '';
+                                              final fullName = _nameController.text.trim();
+                                              final parts = fullName.split(RegExp(r'\s+'));
+                                              final prenom = parts.isNotEmpty ? parts.first : '';
+                                              final nom = parts.length > 1 ? parts.sublist(1).join(' ') : '';
 
                                               setState(() => _loading = true);
                                               try {
-                                                await _api
-                                                    .submitRegistrationStudent(
-                                                      prenom: prenom,
-                                                      nom: nom,
-                                                      email: _emailController
-                                                          .text
-                                                          .trim(),
-                                                      telephone:
-                                                          _phoneController.text
-                                                              .trim(),
-                                                      organisation:
-                                                          _companyController
-                                                              .text
-                                                              .trim()
-                                                              .isEmpty
-                                                          ? null
-                                                          : _companyController
-                                                                .text
-                                                                .trim(),
-                                                    );
+                                                await _api.submitRegistrationStudent(
+                                                  prenom: prenom,
+                                                  nom: nom,
+                                                  email: _emailController.text.trim(),
+                                                  telephone: _phoneController.text.trim(),
+                                                  organisation: _companyController.text.trim(),
+                                                  motifDemande: _motifController.text.trim(),
+                                                  classe: _selectedClasse,
+                                                );
                                                 if (!mounted) return;
                                                 ScaffoldMessenger.of(
                                                   context,
@@ -1214,12 +1215,66 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Widget _buildClasseDropdown(bool isDark) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DropdownButtonFormField<String>(
+              value: _selectedClasse,
+              decoration: InputDecoration(
+                labelText: 'Classe',
+                labelStyle: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.7),
+                  fontFamily: 'Instrument Sans',
+                ),
+                prefixIcon: Icon(
+                  Icons.school,
+                  color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.7),
+                ),
+                border: InputBorder.none,
+              ),
+              dropdownColor: isDark ? Colors.grey[850] : Colors.white,
+              style: TextStyle(
+                color: isDark ? Colors.white : Colors.black,
+                fontFamily: 'Instrument Sans',
+              ),
+              items: ['CIEL1', 'CIEL2', 'SIO1', 'SIO2']
+                  .map((classe) => DropdownMenuItem(
+                        value: classe,
+                        child: Text(classe),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() => _selectedClasse = value);
+                }
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _companyController.dispose();
+    _motifController.dispose();
     super.dispose();
   }
 }
