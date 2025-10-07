@@ -1,22 +1,23 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 /// API client for NSC1 app using Basic Auth.
 ///
 /// IMPORTANT:
 /// - Set the correct baseUrl to your Slim API host.
 /// - Update endpoint paths/fields to match your routes.
-  class ApiService {
-    final String baseUrl;
-    final String basicAuthUser;
-    final String basicAuthPass;
-    final http.Client _client;
-    String? _jwtToken;
-    ApiService({
-      required this.baseUrl,
-      required this.basicAuthUser,
-      required this.basicAuthPass,
-      http.Client? client,
-    }) : _client = client ?? http.Client();
+class ApiService {
+  final String baseUrl;
+  final String basicAuthUser;
+  final String basicAuthPass;
+  final http.Client _client;
+  String? _jwtToken;
+  ApiService({
+    required this.baseUrl,
+    required this.basicAuthUser,
+    required this.basicAuthPass,
+    http.Client? client,
+  }) : _client = client ?? http.Client();
 
   Map<String, String> _headers({Map<String, String>? extra}) {
     final headers = <String, String>{
@@ -52,9 +53,9 @@ import 'package:http/http.dart' as http;
     Map<String, String>? headers,
     Map<String, dynamic>? query,
   }) async {
-    final uri = Uri.parse(_join(baseUrl, path)).replace(
-      queryParameters: query?.map((k, v) => MapEntry(k, '$v')),
-    );
+    final uri = Uri.parse(
+      _join(baseUrl, path),
+    ).replace(queryParameters: query?.map((k, v) => MapEntry(k, '$v')));
     final resp = await _client.get(uri, headers: _headers(extra: headers));
     return _decodeResponse(resp);
   }
@@ -62,7 +63,7 @@ import 'package:http/http.dart' as http;
   /// Default instance using the credentials you provided.
   /// Replace [baseUrl] with your API host before using.
   static ApiService defaultInstance({
-    String baseUrl = 'http://kasalali.alwaysdata.net/API_NSC1',
+    String baseUrl = 'https://kasalali.alwaysdata.net/API_NSC1',
   }) {
     return ApiService(
       baseUrl: baseUrl,
@@ -77,10 +78,10 @@ import 'package:http/http.dart' as http;
     required String password,
   }) async {
     const path = '/login';
-    final res = await _postJson(path, body: {
-      'username': username,
-      'password': password,
-    });
+    final res = await _postJson(
+      path,
+      body: {'username': username, 'password': password},
+    );
     // Capture JWT token if present
     final token = res['token']?.toString();
     if (token != null && token.isNotEmpty) {
@@ -96,7 +97,9 @@ import 'package:http/http.dart' as http;
     return _postJson('/personnes', body: body);
   }
 
-  Future<Map<String, dynamic>> createPersonnel(Map<String, dynamic> body) async {
+  Future<Map<String, dynamic>> createPersonnel(
+    Map<String, dynamic> body,
+  ) async {
     return _postJson('/personnels', body: body);
   }
 
@@ -108,7 +111,9 @@ import 'package:http/http.dart' as http;
     return _postJson('/personne_role', body: body);
   }
 
-  Future<Map<String, dynamic>> createDroitAcces(Map<String, dynamic> body) async {
+  Future<Map<String, dynamic>> createDroitAcces(
+    Map<String, dynamic> body,
+  ) async {
     return _postJson('/droit_acces', body: body);
   }
 
@@ -142,7 +147,8 @@ import 'package:http/http.dart' as http;
 
     throw ApiException(
       statusCode: code,
-      message: jsonMap['error']?.toString() ??
+      message:
+          jsonMap['error']?.toString() ??
           jsonMap['message']?.toString() ??
           'Request failed ($code)',
       rawBody: text,
@@ -187,7 +193,10 @@ import 'package:http/http.dart' as http;
 
     final idPersonne = personRes['id'] ?? personRes['id_personne'];
     if (idPersonne == null) {
-      throw ApiException(statusCode: 500, message: 'Missing id_personne from /personnes');
+      throw ApiException(
+        statusCode: 500,
+        message: 'Missing id_personne from /personnes',
+      );
     }
 
     // Step 2: create eleve row
@@ -227,13 +236,8 @@ class ApiException implements Exception {
   final String message;
   final String? rawBody;
 
-  ApiException({
-    required this.statusCode,
-    required this.message,
-    this.rawBody,
-  });
+  ApiException({required this.statusCode, required this.message, this.rawBody});
 
   @override
   String toString() => 'ApiException($statusCode): $message';
 }
-
