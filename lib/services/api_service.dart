@@ -62,12 +62,12 @@ import 'package:http/http.dart' as http;
   /// Default instance using the credentials you provided.
   /// Replace [baseUrl] with your API host before using.
   static ApiService defaultInstance({
-    String baseUrl = 'https://kasalali.alwaysdata.net/API_NSC1',
+    String baseUrl = 'http://kasalali.alwaysdata.net/API_NSC1',
   }) {
     return ApiService(
       baseUrl: baseUrl,
       basicAuthUser: 'NSC1_API',
-      basicAuthPass: 'JonePorte187',
+      basicAuthPass: 'Jone_Porte!87-/',
     );
   }
 
