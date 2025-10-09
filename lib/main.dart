@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'services/api_service.dart';
 
 extension ColorCompat on Color {
@@ -36,29 +37,110 @@ class _NSC1AppState extends State<NSC1App> {
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
-        fontFamily: 'Instrument Sans',
+        textTheme: GoogleFonts.titilliumWebTextTheme(ThemeData.light().textTheme),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          },
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        fontFamily: 'Instrument Sans',
         colorScheme: const ColorScheme.dark().copyWith(primary: Colors.blue),
+        textTheme: GoogleFonts.titilliumWebTextTheme(ThemeData.dark().textTheme),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: FadeUpwardsPageTransitionsBuilder(),
+          },
+        ),
       ),
       themeMode: _themeMode,
       home: const HomePage(),
-      routes: {
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
-        '/settings': (context) => SettingsPage(
-          themeMode: _themeMode,
-          onThemeModeChanged: _setThemeMode,
-        ),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/login':
+            return _createRoute(const LoginPage());
+          case '/register':
+            return _createRoute(const RegisterPage());
+          case '/settings':
+            return _createRoute(SettingsPage(
+              themeMode: _themeMode,
+              onThemeModeChanged: _setThemeMode,
+            ));
+          default:
+            return null;
+        }
       },
+    );
+  }
+
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOutCubic;
+        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        var offsetAnimation = animation.drive(tween);
+        var fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+          CurvedAnimation(parent: animation, curve: Curves.easeIn),
+        );
+        return FadeTransition(
+          opacity: fadeAnimation,
+          child: SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 400),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  late AnimationController _buttonController1;
+  late AnimationController _buttonController2;
+  late Animation<double> _scaleAnimation1;
+  late Animation<double> _scaleAnimation2;
+
+  @override
+  void initState() {
+    super.initState();
+    _buttonController1 = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _buttonController2 = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _scaleAnimation1 = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _buttonController1, curve: Curves.easeInOut),
+    );
+    _scaleAnimation2 = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _buttonController2, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _buttonController1.dispose();
+    _buttonController2.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,14 +221,13 @@ class HomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: const Text(
+                    child: Text(
                       'NSC1 SECURE DOOR',
-                      style: TextStyle(
+                      style: GoogleFonts.titilliumWeb(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         letterSpacing: 2.0,
-                        fontFamily: 'Instrument Sans',
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -156,21 +237,39 @@ class HomePage extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 // Forgot badge button
-                _buildGlassButton(
-                  onPressed: () => Navigator.pushNamed(context, '/login'),
-                  icon: Icons.key,
-                  text: "J'ai oublié mon badge",
-                  color: Colors.blue,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 300),
+                  child: ScaleTransition(
+                    scale: _scaleAnimation1,
+                    child: _buildGlassButton(
+                      onPressed: () => Navigator.pushNamed(context, '/login'),
+                      onTapDown: (_) => _buttonController1.forward(),
+                      onTapUp: (_) => _buttonController1.reverse(),
+                      onTapCancel: () => _buttonController1.reverse(),
+                      icon: Icons.key,
+                      text: "J'ai oublié mon badge",
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 20),
 
                 // Register button
-                _buildGlassButton(
-                  onPressed: () => Navigator.pushNamed(context, '/register'),
-                  icon: Icons.edit,
-                  text: "Je veux m'inscrire",
-                  color: Colors.green,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 500),
+                  child: ScaleTransition(
+                    scale: _scaleAnimation2,
+                    child: _buildGlassButton(
+                      onPressed: () => Navigator.pushNamed(context, '/register'),
+                      onTapDown: (_) => _buttonController2.forward(),
+                      onTapUp: (_) => _buttonController2.reverse(),
+                      onTapCancel: () => _buttonController2.reverse(),
+                      icon: Icons.edit,
+                      text: "Je veux m'inscrire",
+                      color: Colors.green,
+                    ),
+                  ),
                 ),
 
                 const Spacer(),
@@ -191,10 +290,9 @@ class HomePage extends StatelessWidget {
                   ),
                   child: Text(
                     'Bienvenue sur le système de sécurité NSC1',
-                    style: TextStyle(
+                    style: GoogleFonts.titilliumWeb(
                       fontSize: 16,
                       color: isDark ? Colors.white : Colors.black,
-                      fontFamily: 'Instrument Sans',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -212,6 +310,9 @@ class HomePage extends StatelessWidget {
     required IconData icon,
     required String text,
     required Color color,
+    void Function(TapDownDetails)? onTapDown,
+    void Function(TapUpDetails)? onTapUp,
+    VoidCallback? onTapCancel,
   }) {
     return Container(
       width: double.infinity,
@@ -247,6 +348,9 @@ class HomePage extends StatelessWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: onPressed,
+              onTapDown: onTapDown,
+              onTapUp: onTapUp,
+              onTapCancel: onTapCancel,
               borderRadius: BorderRadius.circular(16),
               splashColor: Colors.white.withValues(alpha: 0.2),
               highlightColor: Colors.white.withValues(alpha: 0.1),
@@ -259,11 +363,10 @@ class HomePage extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       text,
-                      style: const TextStyle(
+                      style: GoogleFonts.titilliumWeb(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
-                        fontFamily: 'Instrument Sans',
                       ),
                     ),
                   ],
@@ -281,11 +384,13 @@ class HomePage extends StatelessWidget {
 class FadeInAnimation extends StatefulWidget {
   final Widget child;
   final Duration duration;
+  final Duration delay;
 
   const FadeInAnimation({
     Key? key,
     required this.child,
     this.duration = const Duration(milliseconds: 1000),
+    this.delay = Duration.zero,
   }) : super(key: key);
 
   @override
@@ -312,7 +417,11 @@ class _FadeInAnimationState extends State<FadeInAnimation>
       end: 0.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    _controller.forward();
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        _controller.forward();
+      }
+    });
   }
 
   @override
@@ -401,22 +510,24 @@ class _LoginPageState extends State<LoginPage> {
                 const Spacer(),
 
                 // Main login container
-                Container(
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 200),
+                  child: Container(
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Column(
-                        children: [
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                        child: Column(
+                          children: [
                           // Door icon
                           Container(
                             width: 60,
@@ -437,9 +548,8 @@ class _LoginPageState extends State<LoginPage> {
                           // Title
                           Text(
                             'Connectez-vous avec vos\nidentifiants',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               fontSize: 20,
-                              fontFamily: 'Instrument Sans',
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black,
                             ),
@@ -450,10 +560,9 @@ class _LoginPageState extends State<LoginPage> {
 
                           Text(
                             'Déverrouiller la porte',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               fontSize: 14,
                               color: isDark ? Colors.white70 : Colors.black54,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
 
@@ -563,11 +672,10 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Center(
                                         child: Text(
                                           _loading ? 'Connexion...' : 'Ouvrir',
-                                          style: const TextStyle(
+                                          style: GoogleFonts.titilliumWeb(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
-                                            fontFamily: 'Instrument Sans',
                                           ),
                                         ),
                                       ),
@@ -577,7 +685,8 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                           ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -586,7 +695,9 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24),
 
                 // Emergency access button
-                Container(
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 400),
+                  child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -619,11 +730,10 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text(
                                 'Accès d\'urgence - Appel à un agent',
-                                style: TextStyle(
+                                style: GoogleFonts.titilliumWeb(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                   color: isDark ? Colors.white : Colors.black,
-                                  fontFamily: 'Instrument Sans',
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -637,13 +747,12 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.red.withValues(alpha: 0.8),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   'Demande d\'accès',
-                                  style: TextStyle(
+                                  style: GoogleFonts.titilliumWeb(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontFamily: 'Instrument Sans',
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -655,29 +764,32 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                ),
 
                 const Spacer(),
 
                 // Contact info
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 600),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
                     ),
-                  ),
-                  child: Text(
-                    'Contactez-nous :',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: isDark ? Colors.white : Colors.black,
-                      fontFamily: 'Instrument Sans',
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'Contactez-nous :',
+                      style: GoogleFonts.titilliumWeb(
+                        fontSize: 14,
+                        color: isDark ? Colors.white : Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -716,17 +828,16 @@ class _LoginPageState extends State<LoginPage> {
                 controller: controller,
                 obscureText: obscureText,
                 validator: validator,
-                style: TextStyle(
+                style: GoogleFonts.titilliumWeb(
                   color: isDark ? Colors.white : Colors.black,
-                  fontFamily: 'Instrument Sans',
                 ),
                 decoration: InputDecoration(
                   hintText: hintText,
-                  hintStyle: TextStyle(
+                  hintStyle: GoogleFonts.titilliumWeb(
                     color: isDark
                         ? Colors.white70
                         : Colors.black.withValues(alpha: 0.7),
-                    fontFamily: 'Instrument Sans',
+                    fontStyle: FontStyle.italic,
                   ),
                   prefixIcon: Icon(
                     icon,
@@ -826,30 +937,31 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 40),
 
                 // Main registration container
-                Container(
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: .1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: .2),
-                      width: 1,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 200),
+                  child: Container(
+                    padding: const EdgeInsets.all(32),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: .1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: .2),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Column(
-                        children: [
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                        child: Column(
+                          children: [
                           // Title
                           Text(
                             'Demande de Badge d\'Accès',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -858,10 +970,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                           Text(
                             'Remplissez ce formulaire pour obtenir vos identifiants et accès au bâtiment',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               fontSize: 14,
                               color: isDark ? Colors.white70 : Colors.black54,
-                              fontFamily: 'Instrument Sans',
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -971,22 +1082,40 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 return;
 
                                               // Split full name into prenom/nom (best-effort)
-                                              final fullName = _nameController.text.trim();
-                                              final parts = fullName.split(RegExp(r'\s+'));
-                                              final prenom = parts.isNotEmpty ? parts.first : '';
-                                              final nom = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+                                              final fullName = _nameController
+                                                  .text
+                                                  .trim();
+                                              final parts = fullName.split(
+                                                RegExp(r'\s+'),
+                                              );
+                                              final prenom = parts.isNotEmpty
+                                                  ? parts.first
+                                                  : '';
+                                              final nom = parts.length > 1
+                                                  ? parts.sublist(1).join(' ')
+                                                  : '';
 
                                               setState(() => _loading = true);
                                               try {
-                                                await _api.submitRegistrationStudent(
-                                                  prenom: prenom,
-                                                  nom: nom,
-                                                  email: _emailController.text.trim(),
-                                                  telephone: _phoneController.text.trim(),
-                                                  organisation: _companyController.text.trim(),
-                                                  motifDemande: _motifController.text.trim(),
-                                                  classe: _selectedClasse,
-                                                );
+                                                await _api
+                                                    .submitRegistrationStudent(
+                                                      prenom: prenom,
+                                                      nom: nom,
+                                                      email: _emailController
+                                                          .text
+                                                          .trim(),
+                                                      telephone:
+                                                          _phoneController.text
+                                                              .trim(),
+                                                      organisation:
+                                                          _companyController
+                                                              .text
+                                                              .trim(),
+                                                      motifDemande:
+                                                          _motifController.text
+                                                              .trim(),
+                                                      classe: _selectedClasse,
+                                                    );
                                                 if (!mounted) return;
                                                 ScaffoldMessenger.of(
                                                   context,
@@ -1034,11 +1163,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                           _loading
                                               ? 'Envoi...'
                                               : 'Envoyer la demande',
-                                          style: const TextStyle(
+                                          style: GoogleFonts.titilliumWeb(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white,
-                                            fontFamily: 'Instrument Sans',
                                           ),
                                         ),
                                       ),
@@ -1053,11 +1181,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                 ),
+                ),
 
                 const SizedBox(height: 24),
 
                 // Important information section
-                Container(
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 400),
+                  child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.2),
@@ -1083,11 +1214,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               const SizedBox(width: 8),
                               Text(
                                 'Informations importantes',
-                                style: TextStyle(
+                                style: GoogleFonts.titilliumWeb(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                   color: isDark ? Colors.white : Colors.black,
-                                  fontFamily: 'Instrument Sans',
                                 ),
                               ),
                             ],
@@ -1095,56 +1225,51 @@ class _RegisterPageState extends State<RegisterPage> {
                           const SizedBox(height: 12),
                           Text(
                             '• Traitement sous 48h ouvrées',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '• Badge personnel et non transmissible',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '• Accès limité aux zones autorisées',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '• Respect du règlement intérieur obligatoire',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '• Restitution du badge en fin de mission',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               color: isDark ? Colors.white : Colors.black,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'Support technique : support@nsc1.com | Urgences : 01 23 45 67 89',
-                            style: TextStyle(
+                            style: GoogleFonts.titilliumWeb(
                               fontSize: 12,
                               color: isDark ? Colors.white70 : Colors.black54,
-                              fontFamily: 'Instrument Sans',
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
+                ),
                 ),
 
                 const SizedBox(height: 40),
@@ -1183,17 +1308,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: controller,
                 keyboardType: keyboardType,
                 validator: validator,
-                style: TextStyle(
+                style: GoogleFonts.titilliumWeb(
                   color: isDark ? Colors.white : Colors.black,
-                  fontFamily: 'Instrument Sans',
                 ),
                 decoration: InputDecoration(
                   hintText: hintText,
-                  hintStyle: TextStyle(
+                  hintStyle: GoogleFonts.titilliumWeb(
                     color: isDark
                         ? Colors.white70
                         : Colors.black.withValues(alpha: 0.7),
-                    fontFamily: 'Instrument Sans',
+                    fontStyle: FontStyle.italic,
                   ),
                   prefixIcon: Icon(
                     icon,
@@ -1235,26 +1359,29 @@ class _RegisterPageState extends State<RegisterPage> {
               value: _selectedClasse,
               decoration: InputDecoration(
                 labelText: 'Classe',
-                labelStyle: TextStyle(
-                  color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.7),
-                  fontFamily: 'Instrument Sans',
+                labelStyle: GoogleFonts.titilliumWeb(
+                  color: isDark
+                      ? Colors.white70
+                      : Colors.black.withValues(alpha: 0.7),
+                  fontStyle: FontStyle.italic,
                 ),
                 prefixIcon: Icon(
                   Icons.school,
-                  color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.7),
+                  color: isDark
+                      ? Colors.white70
+                      : Colors.black.withValues(alpha: 0.7),
                 ),
                 border: InputBorder.none,
               ),
               dropdownColor: isDark ? Colors.grey[850] : Colors.white,
-              style: TextStyle(
+              style: GoogleFonts.titilliumWeb(
                 color: isDark ? Colors.white : Colors.black,
-                fontFamily: 'Instrument Sans',
               ),
               items: ['CIEL1', 'CIEL2', 'SIO1', 'SIO2']
-                  .map((classe) => DropdownMenuItem(
-                        value: classe,
-                        child: Text(classe),
-                      ))
+                  .map(
+                    (classe) =>
+                        DropdownMenuItem(value: classe, child: Text(classe)),
+                  )
                   .toList(),
               onChanged: (value) {
                 if (value != null) {
@@ -1347,24 +1474,26 @@ class SettingsPage extends StatelessWidget {
 
                 const Spacer(),
 
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      width: 1,
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 200),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
                           Row(
                             children: [
                               Icon(
@@ -1375,10 +1504,9 @@ class SettingsPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'Mode sombre',
-                                  style: TextStyle(
+                                  style: GoogleFonts.titilliumWeb(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    fontFamily: 'Instrument Sans',
                                     color: isDark ? Colors.white : Colors.black,
                                   ),
                                 ),
@@ -1423,7 +1551,7 @@ class SettingsPage extends StatelessWidget {
                               child: InkWell(
                                 onTap: () => _quitApp(context),
                                 borderRadius: BorderRadius.circular(16),
-                                child: const Center(
+                                child: Center(
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -1434,11 +1562,10 @@ class SettingsPage extends StatelessWidget {
                                       SizedBox(width: 12),
                                       Text(
                                         "Quitter l'app",
-                                        style: TextStyle(
+                                        style: GoogleFonts.titilliumWeb(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
-                                          fontFamily: 'Instrument Sans',
                                         ),
                                       ),
                                     ],
@@ -1451,6 +1578,7 @@ class SettingsPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
                 ),
 
                 const Spacer(),
