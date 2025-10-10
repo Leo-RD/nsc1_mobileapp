@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_theme.dart';
+import '../widgets/app_logo.dart';
 import '../widgets/background_container.dart';
 import '../widgets/fade_in_animation.dart';
 import '../widgets/glass_button.dart';
@@ -40,8 +41,25 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
 
+                const SizedBox(height: AppConstants.largeSpacing),
+
+                // Logo
+                FadeInAnimation(
+                  delay: const Duration(milliseconds: 100),
+                  child: GlassContainer(
+                    padding: const EdgeInsets.all(AppConstants.largeSpacing),
+                    child: const AppLogo(
+                      height: 120,
+                      withGlow: true,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: AppConstants.largeSpacing),
+
                 // Animated title
                 FadeInAnimation(
+                  delay: const Duration(milliseconds: 200),
                   child: GlassContainer(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppConstants.largeSpacing,
@@ -55,7 +73,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
 
-                const SizedBox(height: 40),
+                const SizedBox(height: AppConstants.extraLargeSpacing),
 
                 // Forgot badge button
                 FadeInAnimation(

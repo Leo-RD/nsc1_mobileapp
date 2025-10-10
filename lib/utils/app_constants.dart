@@ -2,7 +2,8 @@
 class AppConstants {
   // App Info
   static const String appName = 'NSC1 Secure Door';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '1.0.1';
+  static const String logoPath = 'assets/images/logonsc1.png';
 
   // Animation Durations
   static const Duration shortAnimationDuration = Duration(milliseconds: 200);

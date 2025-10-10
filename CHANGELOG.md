@@ -2,6 +2,27 @@
 
 Tous les changements notables de ce projet seront documentés dans ce fichier.
 
+## [1.0.1] - 2025-10-10
+
+### ✨ Ajouté
+- `AppLogo` - Widget réutilisable pour afficher le logo de l'application
+  - Support de la taille personnalisée (height, width)
+  - Option d'effet de lueur (withGlow)
+  - Intégration dans toutes les pages principales
+
+### 🎨 Amélioré
+- Page d'accueil avec logo animé et effet de lueur
+- Page de connexion avec logo en en-tête
+- Page d'inscription avec logo en en-tête
+- Page d'exemples avec démonstration du widget AppLogo
+
+### 📝 Documentation
+- Mise à jour de `QUICK_START.md` avec exemple AppLogo
+- Mise à jour de `widget_examples.dart` avec démonstration du logo
+- Ajout de la constante `logoPath` dans `AppConstants`
+
+---
+
 ## [1.0.0] - 2025-10-10
 
 ### ✨ Ajouté

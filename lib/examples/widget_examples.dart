@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_theme.dart';
 import '../utils/validators.dart';
+import '../widgets/app_logo.dart';
 import '../widgets/background_container.dart';
 import '../widgets/fade_in_animation.dart';
 import '../widgets/glass_button.dart';
@@ -42,6 +43,29 @@ class _WidgetExamplesPageState extends State<WidgetExamplesPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // Section 0: Logo
+                  _buildSection(
+                    'Logo',
+                    isDark,
+                    [
+                      const Center(
+                        child: AppLogo(
+                          height: 100,
+                          withGlow: true,
+                        ),
+                      ),
+                      const SizedBox(height: AppConstants.mediumSpacing),
+                      const Center(
+                        child: AppLogo(
+                          height: 60,
+                          withGlow: false,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: AppConstants.extraLargeSpacing),
+
                   // Section 1: Boutons
                   _buildSection(
                     'Boutons',

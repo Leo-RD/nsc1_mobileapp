@@ -28,7 +28,7 @@ class LoadingOverlay extends StatelessWidget {
                 sigmaY: AppConstants.lightBlur,
               ),
               child: Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

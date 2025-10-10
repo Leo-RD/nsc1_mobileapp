@@ -40,9 +40,10 @@ class _GlassButtonState extends State<GlassButton>
       vsync: this,
       duration: AppConstants.shortAnimationDuration,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -79,7 +80,7 @@ class _GlassButtonState extends State<GlassButton>
             gradient: AppTheme.buttonGradient(widget.color),
             boxShadow: AppTheme.buttonShadow(widget.color),
             border: Border.all(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               width: 1.5,
             ),
           ),
@@ -93,13 +94,12 @@ class _GlassButtonState extends State<GlassButton>
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: widget.isLoading ? null : widget.onPressed,
                   onTapDown: widget.isLoading ? null : _onTapDown,
                   onTapUp: widget.isLoading ? null : _onTapUp,
                   onTapCancel: widget.isLoading ? null : _onTapCancel,
                   borderRadius: BorderRadius.circular(AppConstants.largeRadius),
-                  splashColor: Colors.white.withOpacity(0.2),
-                  highlightColor: Colors.white.withOpacity(0.1),
+                  splashColor: Colors.white.withValues(alpha: 0.2),
+                  highlightColor: Colors.white.withValues(alpha: 0.1),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppConstants.largeSpacing,
@@ -113,8 +113,9 @@ class _GlassButtonState extends State<GlassButton>
                             height: 24,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         else

@@ -3,12 +3,13 @@ import '../services/api_service.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_theme.dart';
 import '../utils/validators.dart';
+import '../widgets/app_logo.dart';
 import '../widgets/background_container.dart';
+import '../widgets/custom_snackbar.dart';
 import '../widgets/fade_in_animation.dart';
 import '../widgets/glass_button.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/glass_text_field.dart';
-import '../widgets/custom_snackbar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -111,27 +112,27 @@ class _LoginPageState extends State<LoginPage> {
                 FadeInAnimation(
                   delay: const Duration(milliseconds: 200),
                   child: GlassContainer(
-                    padding: const EdgeInsets.all(AppConstants.extraLargeSpacing),
+                    padding: const EdgeInsets.all(
+                      AppConstants.extraLargeSpacing,
+                    ),
                     child: Column(
                       children: [
-                        // Door icon
-                        Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(AppConstants.mediumOpacity),
-                            borderRadius: BorderRadius.circular(AppConstants.mediumRadius),
-                          ),
-                          child: Icon(
-                            Icons.door_front_door,
-                            color: isDark ? Colors.white : Colors.black,
-                            size: 30,
-                          ),
+                        // Logo
+                        const AppLogo(
+                          height: 80,
                         ),
 
                         const SizedBox(height: AppConstants.largeSpacing),
 
                         // Title
+                        Text(
+                          'Porte déverrouillée',
+                          style: AppTheme.titleStyle(isDark),
+                          textAlign: TextAlign.center,
+                        ),
+
+                        const SizedBox(height: AppConstants.smallSpacing),
+
                         Text(
                           'Connectez-vous avec vos\nidentifiants',
                           style: AppTheme.subheadingStyle(isDark),
@@ -159,7 +160,9 @@ class _LoginPageState extends State<LoginPage> {
                                 validator: Validators.username,
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               GlassTextField(
                                 controller: _passwordController,
@@ -194,13 +197,17 @@ class _LoginPageState extends State<LoginPage> {
                   delay: const Duration(milliseconds: 400),
                   child: GlassContainer(
                     padding: const EdgeInsets.all(AppConstants.mediumSpacing),
-                    color: AppTheme.primaryRed.withOpacity(AppConstants.mediumOpacity),
-                    borderColor: AppTheme.primaryRed.withOpacity(0.4),
+                    color: AppTheme.primaryRed.withValues(
+                      alpha: AppConstants.mediumOpacity,
+                    ),
+                    borderColor: AppTheme.primaryRed.withValues(alpha: 0.4),
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: _handleEmergencyAccess,
-                        borderRadius: BorderRadius.circular(AppConstants.mediumRadius),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.mediumRadius,
+                        ),
                         child: Column(
                           children: [
                             Text(
@@ -218,8 +225,12 @@ class _LoginPageState extends State<LoginPage> {
                                 vertical: AppConstants.mediumSpacing,
                               ),
                               decoration: BoxDecoration(
-                                color: AppTheme.primaryRed.withOpacity(0.8),
-                                borderRadius: BorderRadius.circular(AppConstants.smallRadius),
+                                color: AppTheme.primaryRed.withValues(
+                                  alpha: 0.8,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.smallRadius,
+                                ),
                               ),
                               child: Text(
                                 'Demande d\'accès',

@@ -17,53 +17,53 @@ class AppTheme {
 
   // Glass Effect Colors
   static Color glassBackground(bool isDark) => isDark
-      ? Colors.white.withOpacity(AppConstants.lowOpacity)
-      : Colors.white.withOpacity(AppConstants.lowOpacity);
+      ? Colors.white.withValues(alpha: AppConstants.lowOpacity)
+      : Colors.white.withValues(alpha: AppConstants.lowOpacity);
 
   static Color glassBorder(bool isDark) => isDark
-      ? Colors.white.withOpacity(AppConstants.mediumOpacity)
-      : Colors.white.withOpacity(AppConstants.mediumOpacity);
+      ? Colors.white.withValues(alpha: AppConstants.mediumOpacity)
+      : Colors.white.withValues(alpha: AppConstants.mediumOpacity);
 
   // Text Styles
   static TextStyle titleStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        fontSize: 28,
-        fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : Colors.black,
-        letterSpacing: 2.0,
-      );
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    color: isDark ? Colors.white : Colors.black,
+    letterSpacing: 2.0,
+  );
 
   static TextStyle headingStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : Colors.black,
-      );
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: isDark ? Colors.white : Colors.black,
+  );
 
   static TextStyle subheadingStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: isDark ? Colors.white : Colors.black,
-      );
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: isDark ? Colors.white : Colors.black,
+  );
 
   static TextStyle bodyStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        fontSize: 16,
-        color: isDark ? Colors.white : Colors.black,
-      );
+    fontSize: 16,
+    color: isDark ? Colors.white : Colors.black,
+  );
 
   static TextStyle captionStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        fontSize: 14,
-        color: isDark ? Colors.white70 : Colors.black54,
-      );
+    fontSize: 14,
+    color: isDark ? Colors.white70 : Colors.black54,
+  );
 
   static TextStyle buttonTextStyle() => GoogleFonts.titilliumWeb(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: Colors.white,
-      );
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white,
+  );
 
   static TextStyle hintStyle(bool isDark) => GoogleFonts.titilliumWeb(
-        color: isDark ? Colors.white70 : Colors.black.withOpacity(0.7),
-        fontStyle: FontStyle.italic,
-      );
+    color: isDark ? Colors.white70 : Colors.black.withValues(alpha: 0.7),
+    fontStyle: FontStyle.italic,
+  );
 
   // Light Theme
   static ThemeData lightTheme() {
@@ -120,10 +120,7 @@ class AppTheme {
     return BoxDecoration(
       color: glassBackground(isDark),
       borderRadius: BorderRadius.circular(AppConstants.mediumRadius),
-      border: Border.all(
-        color: glassBorder(isDark),
-        width: 1,
-      ),
+      border: Border.all(color: glassBorder(isDark), width: 1),
     );
   }
 
@@ -132,10 +129,7 @@ class AppTheme {
     return LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
-      colors: [
-        color.withOpacity(0.95),
-        color.withOpacity(0.75),
-      ],
+      colors: [color.withValues(alpha: 0.95), color.withValues(alpha: 0.75)],
     );
   }
 
@@ -143,7 +137,7 @@ class AppTheme {
   static List<BoxShadow> buttonShadow(Color color) {
     return [
       BoxShadow(
-        color: color.withOpacity(0.45),
+        color: color.withValues(alpha: 0.45),
         blurRadius: 14,
         spreadRadius: 1,
         offset: const Offset(0, 6),

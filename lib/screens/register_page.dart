@@ -3,12 +3,13 @@ import '../services/api_service.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_theme.dart';
 import '../utils/validators.dart';
+import '../widgets/app_logo.dart';
 import '../widgets/background_container.dart';
+import '../widgets/custom_snackbar.dart';
 import '../widgets/fade_in_animation.dart';
 import '../widgets/glass_button.dart';
 import '../widgets/glass_container.dart';
 import '../widgets/glass_text_field.dart';
-import '../widgets/custom_snackbar.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -56,7 +57,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
       CustomSnackbar.show(
         context,
-        message: 'Demande envoyée avec succès! Vous recevrez une réponse sous 48h.',
+        message:
+            'Demande envoyée avec succès! Vous recevrez une réponse sous 48h.',
         type: SnackbarType.success,
         duration: const Duration(seconds: 4),
       );
@@ -119,9 +121,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 FadeInAnimation(
                   delay: const Duration(milliseconds: 200),
                   child: GlassContainer(
-                    padding: const EdgeInsets.all(AppConstants.extraLargeSpacing),
+                    padding: const EdgeInsets.all(
+                      AppConstants.extraLargeSpacing,
+                    ),
                     child: Column(
                       children: [
+                        // Logo
+                        const AppLogo(
+                          height: 70,
+                        ),
+
+                        const SizedBox(height: AppConstants.largeSpacing),
+
                         // Title
                         Text(
                           'Demande de Badge d\'Accès',
@@ -151,7 +162,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 validator: Validators.fullName,
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               GlassTextField(
                                 controller: _emailController,
@@ -161,7 +174,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 validator: Validators.email,
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               GlassTextField(
                                 controller: _phoneController,
@@ -171,28 +186,38 @@ class _RegisterPageState extends State<RegisterPage> {
                                 validator: Validators.phone,
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               GlassTextField(
                                 controller: _companyController,
                                 hintText: 'Organisation',
                                 icon: Icons.business,
-                                validator: (value) =>
-                                    Validators.required(value, fieldName: 'votre organisation'),
+                                validator: (value) => Validators.required(
+                                  value,
+                                  fieldName: 'votre organisation',
+                                ),
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               GlassTextField(
                                 controller: _motifController,
                                 hintText: 'Motif de la demande',
                                 icon: Icons.description,
                                 maxLines: 3,
-                                validator: (value) =>
-                                    Validators.required(value, fieldName: 'le motif de votre demande'),
+                                validator: (value) => Validators.required(
+                                  value,
+                                  fieldName: 'le motif de votre demande',
+                                ),
                               ),
 
-                              const SizedBox(height: AppConstants.mediumSpacing),
+                              const SizedBox(
+                                height: AppConstants.mediumSpacing,
+                              ),
 
                               _buildClasseDropdown(isDark),
 
@@ -221,8 +246,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   delay: const Duration(milliseconds: 400),
                   child: GlassContainer(
                     padding: const EdgeInsets.all(AppConstants.largeSpacing),
-                    color: AppTheme.primaryBlue.withOpacity(AppConstants.mediumOpacity),
-                    borderColor: AppTheme.primaryBlue.withOpacity(0.3),
+                    color: AppTheme.primaryBlue.withValues(
+                      alpha: AppConstants.mediumOpacity,
+                    ),
+                    borderColor: AppTheme.primaryBlue.withValues(alpha: 0.3),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -235,22 +262,36 @@ class _RegisterPageState extends State<RegisterPage> {
                             const SizedBox(width: AppConstants.smallSpacing),
                             Text(
                               'Informations importantes',
-                              style: AppTheme.bodyStyle(isDark).copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: AppTheme.bodyStyle(
+                                isDark,
+                              ).copyWith(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
                         const SizedBox(height: AppConstants.mediumSpacing),
                         _buildInfoItem('Traitement sous 48h ouvrées', isDark),
-                        _buildInfoItem('Badge personnel et non transmissible', isDark),
-                        _buildInfoItem('Accès limité aux zones autorisées', isDark),
-                        _buildInfoItem('Respect du règlement intérieur obligatoire', isDark),
-                        _buildInfoItem('Restitution du badge en fin de mission', isDark),
+                        _buildInfoItem(
+                          'Badge personnel et non transmissible',
+                          isDark,
+                        ),
+                        _buildInfoItem(
+                          'Accès limité aux zones autorisées',
+                          isDark,
+                        ),
+                        _buildInfoItem(
+                          'Respect du règlement intérieur obligatoire',
+                          isDark,
+                        ),
+                        _buildInfoItem(
+                          'Restitution du badge en fin de mission',
+                          isDark,
+                        ),
                         const SizedBox(height: AppConstants.mediumSpacing),
                         Text(
                           'Support: ${AppConstants.supportEmail}\nUrgences: ${AppConstants.emergencyPhone}',
-                          style: AppTheme.captionStyle(isDark).copyWith(fontSize: 12),
+                          style: AppTheme.captionStyle(
+                            isDark,
+                          ).copyWith(fontSize: 12),
                         ),
                       ],
                     ),
@@ -272,16 +313,8 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '• ',
-            style: AppTheme.bodyStyle(isDark),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTheme.bodyStyle(isDark),
-            ),
-          ),
+          Text('• ', style: AppTheme.bodyStyle(isDark)),
+          Expanded(child: Text(text, style: AppTheme.bodyStyle(isDark))),
         ],
       ),
     );
@@ -289,15 +322,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _buildClasseDropdown(bool isDark) {
     return GlassContainer(
-      padding: const EdgeInsets.symmetric(horizontal: AppConstants.mediumSpacing),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConstants.mediumSpacing,
+      ),
       child: DropdownButtonFormField<String>(
-        value: _selectedClasse,
+        initialValue: _selectedClasse,
         decoration: InputDecoration(
           labelText: 'Classe',
           labelStyle: AppTheme.hintStyle(isDark),
           prefixIcon: Icon(
             Icons.school,
-            color: isDark ? Colors.white70 : Colors.black.withOpacity(0.7),
+            color: isDark
+                ? Colors.white70
+                : Colors.black.withValues(alpha: 0.7),
           ),
           border: InputBorder.none,
         ),
@@ -305,10 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
         style: AppTheme.bodyStyle(isDark),
         items: AppConstants.availableClasses
             .map(
-              (classe) => DropdownMenuItem(
-                value: classe,
-                child: Text(classe),
-              ),
+              (classe) => DropdownMenuItem(value: classe, child: Text(classe)),
             )
             .toList(),
         onChanged: (value) {

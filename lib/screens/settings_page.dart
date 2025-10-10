@@ -102,9 +102,9 @@ class SettingsPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   'Mode sombre',
-                                  style: AppTheme.bodyStyle(isDark).copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: AppTheme.bodyStyle(
+                                    isDark,
+                                  ).copyWith(fontWeight: FontWeight.w600),
                                 ),
                               ),
                               Switch(
@@ -112,7 +112,7 @@ class SettingsPage extends StatelessWidget {
                                 onChanged: (value) => onThemeModeChanged(
                                   value ? ThemeMode.dark : ThemeMode.light,
                                 ),
-                                activeColor: AppTheme.primaryBlue,
+                                activeThumbColor: AppTheme.primaryBlue,
                               ),
                             ],
                           ),
@@ -131,9 +131,9 @@ class SettingsPage extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 'Version',
-                                style: AppTheme.bodyStyle(isDark).copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppTheme.bodyStyle(
+                                  isDark,
+                                ).copyWith(fontWeight: FontWeight.w600),
                               ),
                             ),
                             Text(
@@ -150,11 +150,17 @@ class SettingsPage extends StatelessWidget {
                           width: double.infinity,
                           height: AppConstants.buttonHeight,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(AppConstants.largeRadius),
-                            gradient: AppTheme.buttonGradient(AppTheme.primaryRed),
-                            boxShadow: AppTheme.buttonShadow(AppTheme.primaryRed),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.largeRadius,
+                            ),
+                            gradient: AppTheme.buttonGradient(
+                              AppTheme.primaryRed,
+                            ),
+                            boxShadow: AppTheme.buttonShadow(
+                              AppTheme.primaryRed,
+                            ),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               width: 1.5,
                             ),
                           ),
@@ -162,7 +168,9 @@ class SettingsPage extends StatelessWidget {
                             color: Colors.transparent,
                             child: InkWell(
                               onTap: () => _quitApp(context),
-                              borderRadius: BorderRadius.circular(AppConstants.largeRadius),
+                              borderRadius: BorderRadius.circular(
+                                AppConstants.largeRadius,
+                              ),
                               child: Center(
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -171,7 +179,9 @@ class SettingsPage extends StatelessWidget {
                                       Icons.power_settings_new,
                                       color: Colors.white,
                                     ),
-                                    const SizedBox(width: AppConstants.mediumSpacing),
+                                    const SizedBox(
+                                      width: AppConstants.mediumSpacing,
+                                    ),
                                     Text(
                                       "Quitter l'app",
                                       style: AppTheme.buttonTextStyle(),

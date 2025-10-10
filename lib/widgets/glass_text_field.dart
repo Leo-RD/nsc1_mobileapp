@@ -81,7 +81,7 @@ class _GlassTextFieldState extends State<GlassTextField> {
               borderRadius: BorderRadius.circular(AppConstants.mediumRadius),
               border: Border.all(
                 color: _errorText != null
-                    ? AppTheme.primaryRed.withOpacity(0.5)
+                    ? AppTheme.primaryRed.withValues(alpha: 0.5)
                     : AppTheme.glassBorder(isDark),
                 width: _errorText != null ? 2 : 1,
               ),
@@ -115,7 +115,7 @@ class _GlassTextFieldState extends State<GlassTextField> {
                       widget.icon,
                       color: isDark
                           ? Colors.white70
-                          : Colors.black.withOpacity(0.7),
+                          : Colors.black.withValues(alpha: 0.7),
                     ),
                     suffixIcon: widget.obscureText
                         ? IconButton(
@@ -125,7 +125,7 @@ class _GlassTextFieldState extends State<GlassTextField> {
                                   : Icons.visibility,
                               color: isDark
                                   ? Colors.white70
-                                  : Colors.black.withOpacity(0.7),
+                                  : Colors.black.withValues(alpha: 0.7),
                             ),
                             onPressed: _toggleObscureText,
                           )

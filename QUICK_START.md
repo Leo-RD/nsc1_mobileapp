@@ -24,7 +24,17 @@ lib/
 
 ## 🎨 Widgets disponibles
 
-### 1. GlassButton
+### 1. AppLogo
+Logo de l'application avec options de personnalisation.
+
+```dart
+AppLogo(
+  height: 100,
+  withGlow: true,  // Ajoute un effet de lueur
+)
+```
+
+### 2. GlassButton
 Bouton avec effet glass, animations et état de chargement.
 
 ```dart
@@ -37,7 +47,7 @@ GlassButton(
 )
 ```
 
-### 2. GlassTextField
+### 3. GlassTextField
 Champ de texte avec validation en temps réel.
 
 ```dart

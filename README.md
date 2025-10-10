@@ -32,6 +32,7 @@ lib/
 │   ├── register_page.dart
 │   └── settings_page.dart
 ├── widgets/                     # Composants réutilisables
+│   ├── app_logo.dart
 │   ├── background_container.dart
 │   ├── fade_in_animation.dart
 │   ├── glass_button.dart
